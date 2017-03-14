@@ -1,7 +1,10 @@
 apt-get update 
-apt-get upgrade -y
+#apt-get upgrade -y
 apt-get install nodejs npm git mongodb -y
 service mongodb start
+## reroute traffic to port 80 to port 3000
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
+
 mkdir /var/www
 cd /var/www
 if [ ! -d /var/www/devops_test_site ]; then
@@ -10,4 +13,4 @@ fi
 cd devops_test_site
 git pull origin master
 npm install
-nodejs server.js 
+runuser -l ubuntu -c '/./vagrant/nonRoot.sh'
